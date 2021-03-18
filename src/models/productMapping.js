@@ -1,5 +1,5 @@
 const Sequelize=require('sequelize');
-const sequelize = require('../connect');
+const sequelize = require('../utils/connect');
 const user=require('./user');
 const product=require('./product');
 const branch = require('./branch');

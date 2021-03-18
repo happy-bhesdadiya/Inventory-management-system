@@ -1,8 +1,15 @@
-const Sequelize=require('sequelize');
-const sequelize = require('../utils/connect');
-const branch=require('./branch')
-const user=sequelize.define('user',{
-    id:{
+'use strict';
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    /**
+     * Add altering commands here.
+     *
+     * Example:
+     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
+     */
+     await queryInterface.createTable('user', { 
+      id:{
         type:Sequelize.UUID,
         primaryKey:true,
         defaultValue:Sequelize.UUIDV4
@@ -27,10 +34,16 @@ const user=sequelize.define('user',{
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
       }
-    
-},{
-  timestamps:false
-})
+      });
+  },
 
-branch.hasOne(user,{foreignKey:branch.id})
-module.exports=user
+  down: async (queryInterface, Sequelize) => {
+    /**
+     * Add reverting commands here.
+     *
+     * Example:
+     * await queryInterface.dropTable('users');
+     */
+     await queryInterface.dropTable('user');
+  }
+};

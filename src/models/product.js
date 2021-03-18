@@ -1,5 +1,5 @@
 const Sequelize=require('sequelize');
-const sequelize = require('../connect');
+const sequelize = require('../utils/connect');
 const product=sequelize.define('product',{
     id:{
         type:Sequelize.UUID,
