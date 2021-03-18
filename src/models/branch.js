@@ -1,5 +1,5 @@
 const Sequelize=require('sequelize');
-const sequelize = require('../connect');
+const sequelize = require('../utils/connect');
 const branch=sequelize.define('branch',{
     id:{
         type:Sequelize.UUID,
