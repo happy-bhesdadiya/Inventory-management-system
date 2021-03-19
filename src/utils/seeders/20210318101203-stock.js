@@ -13,7 +13,7 @@ module.exports = {
     */
      await queryInterface.bulkInsert('stock', [
        {
-          id:'12',
+         // id:'12',
           productname:'hp  mouse',
           available_qty:20,
           total_qty:50,
@@ -22,7 +22,7 @@ module.exports = {
 
        },
        {
-        id:'122',
+       // id:'122',
         productname:'hp  keyboard',
         available_qty:10,
         total_qty:150,
@@ -30,7 +30,7 @@ module.exports = {
         price_per_product:500
      },
      {
-      id:'2212',
+      //id:'2212',
       productname:'dell  mouse',
       available_qty:30,
       total_qty:50,
@@ -38,7 +38,7 @@ module.exports = {
       price_per_product:400
    },
    {
-    id:'1342',
+    //id:'1342',
     productname:'dell  keyboard',
     available_qty:20,
     total_qty:50,
@@ -46,7 +46,7 @@ module.exports = {
     price_per_product:400
  },
  {
-  id:'12342',
+  //id:'12342',
   productname:'Dell Monitor',
   available_qty:20,
   total_qty:50,
@@ -55,7 +55,7 @@ module.exports = {
 
 },
 {
-  id:'222312',
+ // id:'222312',
   productname:'Sony projector',
   available_qty:20,
   total_qty:50,

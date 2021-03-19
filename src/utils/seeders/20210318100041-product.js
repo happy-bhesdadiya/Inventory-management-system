@@ -14,17 +14,17 @@ module.exports = {
     */
      await queryInterface.bulkInsert('product', [
        {
-         id:'123',
+        // id:'123',
          name:"hp mouse 1",
          is_available:0
        },
        {
-        id:'234123',
+       // id:'234123',
         name:"hp mouse 2",
         is_available:0
       },
       {
-        id:'233123',
+       // id:'233123',
         name:"hp mouse 3",
         is_available:1
       }
