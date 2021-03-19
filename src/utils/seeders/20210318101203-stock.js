@@ -11,10 +11,10 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-     await queryInterface.bulkInsert('stock', [
+     await queryInterface.bulkInsert('stocks', [
        {
          // id:'12',
-          productname:'hp  mouse',
+          product_name:'hp  mouse',
           available_qty:20,
           total_qty:50,
           product_image:'http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png',
@@ -23,7 +23,7 @@ module.exports = {
        },
        {
        // id:'122',
-        productname:'hp  keyboard',
+        product_name:'hp  keyboard',
         available_qty:10,
         total_qty:150,
         product_image:'http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png',
@@ -31,7 +31,7 @@ module.exports = {
      },
      {
       //id:'2212',
-      productname:'dell  mouse',
+      product_name:'dell  mouse',
       available_qty:30,
       total_qty:50,
       product_image:'http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png',
@@ -39,7 +39,7 @@ module.exports = {
    },
    {
     //id:'1342',
-    productname:'dell  keyboard',
+    product_name:'dell  keyboard',
     available_qty:20,
     total_qty:50,
     product_image:'http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png',
@@ -47,7 +47,7 @@ module.exports = {
  },
  {
   //id:'12342',
-  productname:'Dell Monitor',
+  product_name:'Dell Monitor',
   available_qty:20,
   total_qty:50,
   product_image:'http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png',
@@ -56,7 +56,7 @@ module.exports = {
 },
 {
  // id:'222312',
-  productname:'Sony projector',
+  product_name:'Sony projector',
   available_qty:20,
   total_qty:50,
   product_image:'http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png',
@@ -72,6 +72,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-      await queryInterface.bulkDelete('stock', null, {});
+      await queryInterface.bulkDelete('stocks', null, {});
   }
 };

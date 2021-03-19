@@ -8,13 +8,13 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-     await queryInterface.createTable('user', { 
+     await queryInterface.createTable('users', { 
       id:{
         type: Sequelize.INTEGER,
         autoIncrement: true,
        primaryKey:true,
     },
-    username: Sequelize.STRING,
+    user_name: Sequelize.STRING,
     profile_image:Sequelize.STRING,
      email:Sequelize.STRING,
       password:Sequelize.STRING,
@@ -22,7 +22,7 @@ module.exports = {
         type:Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
-          model: 'branch',
+          model: 'branches',
           key: 'id'
         }
       },
@@ -57,6 +57,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-     await queryInterface.dropTable('user');
+     await queryInterface.dropTable('users');
   }
 };

@@ -12,20 +12,20 @@ module.exports = {
      * }], {});
      * 
     */
-     await queryInterface.bulkInsert('product', [
+     await queryInterface.bulkInsert('products', [
        {
         // id:'123',
-         name:"hp mouse 1",
+         product_name:"hp mouse 1",
          is_available:0
        },
        {
        // id:'234123',
-        name:"hp mouse 2",
+        product_name:"hp mouse 2",
         is_available:0
       },
       {
        // id:'233123',
-        name:"hp mouse 3",
+        product_name:"hp mouse 3",
         is_available:1
       }
       
@@ -39,6 +39,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-     await queryInterface.bulkDelete('product', null, {});
+     await queryInterface.bulkDelete('products', null, {});
   }
 };

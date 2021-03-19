@@ -11,7 +11,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-     await queryInterface.bulkInsert('productMapping', [
+     await queryInterface.bulkInsert('productMappings', [
        {
         // id:'123',
         product_id:1,
@@ -60,6 +60,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-     await queryInterface.bulkDelete('productMapping', null, {});
+     await queryInterface.bulkDelete('productMappings', null, {});
   }
 };

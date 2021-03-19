@@ -11,18 +11,18 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-     await queryInterface.bulkInsert('branch', [
+     await queryInterface.bulkInsert('branches', [
        {
         // id:'1',
-         branchname:"Time Square 12 floor"
+         branch_name:"Time Square 12 floor"
         },
         {
           //id:'2',
-          branchname:"Time Square 8 floor"
+          branch_name:"Time Square 8 floor"
          },
          {
          // id:'3',
-          branchname:"GIFT CITY"
+          branch_name:"GIFT CITY"
          }
       ] ,{});
   },
@@ -34,6 +34,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-     await queryInterface.bulkDelete('branch', null, {});
+     await queryInterface.bulkDelete('branches', null, {});
   }
 };

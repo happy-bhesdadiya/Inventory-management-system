@@ -11,10 +11,10 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-     await queryInterface.bulkInsert('user', [
+     await queryInterface.bulkInsert('users', [
        {
         // id:'123',
-         username:"prem",
+         user_name:"prem",
          profile_image:"http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png",
          email:"prem.panwala@bacancy.com",
          password:"prem0131",
@@ -24,7 +24,7 @@ module.exports = {
        },
        {
         //id:'12223',
-        username:"Nisarg",
+        user_name:"Nisarg",
         profile_image:"http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png",
         email:"Nisarg.Choksi@bacancy.com",
         password:"Nisagr345131",
@@ -34,7 +34,7 @@ module.exports = {
       },
       {
       //  id:'345123',
-        username:"Bhargav",
+        user_name:"Bhargav",
         profile_image:"http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png",
         email:"Bhargav.kanodiya@bacancy.com",
         password:"345566",
@@ -44,7 +44,7 @@ module.exports = {
       },
       {
       //  id:'222123',
-        username:"Bhoomi mheta",
+        user_name:"Bhoomi mheta",
         profile_image:"http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png",
         email:"Bhommi.mheta@bacancy.com",
         password:"Bacancy",
@@ -54,7 +54,7 @@ module.exports = {
       },
       {
        // id:'45123',
-        username:"Ankita Acharya",
+        user_name:"Ankita Acharya",
         profile_image:"http://localhost:5000/public/f3727ca9-5ea6-4d14-b84c-7081771cbda2-table.png",
         email:"Ankita.Acharya@bacancy.com",
         password:"Bacancy",
@@ -72,6 +72,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-     await queryInterface.bulkDelete('user', null, {});
+     await queryInterface.bulkDelete('users', null, {});
   }
 };

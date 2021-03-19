@@ -1,8 +1,7 @@
 {
-<<<<<<< HEAD
     "development": {
       "username": "root",
-      "password": "Bhargav4@",
+      "password": "Bhargav42@",
       "database": "inventory",
       "host": "127.0.0.1",
       "dialect": "mysql"
@@ -22,27 +21,3 @@
       "dialect": "mysql"
     }
   }
-=======
-  "development": {
-    "username": "root",
-    "password": "Bhargav42@",
-    "database": "inventory",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "test": {
-    "username": "root",
-    "password": "Bhargav42@",
-    "database": "inventory",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  },
-  "production": {
-    "username": "root",
-    "password": "Bhargav42@",
-    "database": "inventory",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  }
-}
->>>>>>> master

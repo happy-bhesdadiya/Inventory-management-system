@@ -8,13 +8,13 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-     await queryInterface.createTable('stock', {
+     await queryInterface.createTable('stocks', {
       id:{
         type: Sequelize.INTEGER,
          autoIncrement: true,
         primaryKey:true,
     },
-    productname: Sequelize.STRING,
+    product_name: Sequelize.STRING,
      available_qty:Sequelize.INTEGER,
      total_qty:Sequelize.INTEGER,
      product_image:Sequelize.STRING,
@@ -29,6 +29,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-     await queryInterface.dropTable('stock');
+     await queryInterface.dropTable('stocks');
   }
 };

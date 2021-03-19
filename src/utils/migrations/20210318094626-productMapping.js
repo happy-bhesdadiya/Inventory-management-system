@@ -8,7 +8,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-     await queryInterface.createTable('productMapping', {
+     await queryInterface.createTable('productMappings', {
       id:{
         type: Sequelize.INTEGER,
          autoIncrement: true,
@@ -18,7 +18,7 @@ module.exports = {
             type:Sequelize.INTEGER,
             onDelete: 'CASCADE',
             references: {
-              model: 'product',
+              model: 'products',
               key: 'id'
             }
           },
@@ -26,7 +26,7 @@ module.exports = {
             type:Sequelize.INTEGER,
             onDelete: 'CASCADE',
             references: {
-              model: 'user',
+              model: 'users',
               key: 'id'
             }
           },
@@ -34,7 +34,7 @@ module.exports = {
             type:Sequelize.INTEGER,
             onDelete: 'CASCADE',
             references: {
-              model: 'user',
+              model: 'users',
               key: 'id'
             }
           },
@@ -58,6 +58,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-     await queryInterface.dropTable('productMapping');
+     await queryInterface.dropTable('productMappings');
   }
 };
