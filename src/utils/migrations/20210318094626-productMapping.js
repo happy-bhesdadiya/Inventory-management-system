@@ -40,11 +40,11 @@ module.exports = {
           },
           
       issued_date:{
-        type: 'TIMESTAMP',
+        type: Sequelize.DATE,
         allowNull: true
             },
       returned_date:{
-        type: 'TIMESTAMP',
+        type:Sequelize.DATE,
         allowNull: true
             }  ,
       status:Sequelize.STRING

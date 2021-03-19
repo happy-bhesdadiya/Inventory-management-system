@@ -2,7 +2,7 @@ const Sequelize=require('sequelize');
 const sequelize = require('../utils/connect');
 const branch=sequelize.define('branch',{
     id:{
-        type:Sequelize.BIGINT,
+        type:Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true

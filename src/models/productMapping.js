@@ -6,7 +6,7 @@ const branch = require('./branch');
 
 const productMapping=sequelize.define('productMapping',{
     id:{
-        type:Sequelize.BIGINT,
+        type:Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
