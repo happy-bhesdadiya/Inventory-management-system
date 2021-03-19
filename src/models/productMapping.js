@@ -12,11 +12,11 @@ const productMapping=sequelize.define('productMapping',{
         primaryKey: true
     },
    issued_date:{
-    type: DATE,
+    type: Sequelize.DATE,
     defaultValue:null
    },
    returned_date:{
-    type: DATE,
+    type: Sequelize.DATE,
     defaultValue:null
    }  ,
    status:{
