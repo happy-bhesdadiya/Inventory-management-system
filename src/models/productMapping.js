@@ -24,7 +24,7 @@ const productMapping=sequelize.define('productMapping',{
     }
 })
 
-user.hasOne(productMapping,{foriegnKey:user.id})
-branch.hasOne(productMapping,{foriegnKey:branch.id})
+user.hasOne(productMapping,{as:'assigned_by',foriegnKey:user.id})
+user.hasOne(productMapping,{as:'assigned_to',foriegnKey:user.id})
 product.hasOne(productMapping,{foriegnKey:product.id})
 module.exports=productMapping
