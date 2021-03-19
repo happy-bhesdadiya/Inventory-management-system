@@ -1,22 +1,22 @@
 {
   "development": {
     "username": "root",
-    "password": "prem0131",
-    "database": "inventorysystem",
+    "password": "Bhargav42@",
+    "database": "inventory",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "prem0131",
-    "database": "inventorysystem",
+    "password": "Bhargav42@",
+    "database": "inventory",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "prem0131",
-    "database": "inventorysystem",
+    "password": "Bhargav42@",
+    "database": "inventory",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }

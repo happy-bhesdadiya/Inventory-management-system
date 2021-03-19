@@ -2,12 +2,19 @@ const Sequelize=require('sequelize');
 const sequelize = require('../utils/connect');
 const product=sequelize.define('product',{
     id:{
-        type:Sequelize.UUID,
-        primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
+        type:Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
     },
-    name: Sequelize.STRING,
-    is_available:Sequelize.BOOLEAN
+    name: {
+        type:Sequelize.STRING,
+        allowNull:false
+    },
+    is_available:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:true
+    }
     },
     {
         timestamps:false
