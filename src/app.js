@@ -1,6 +1,7 @@
 var express = require('express');
 require('dotenv').config({path:'./credentials.env'})
 var sequelize= require('./utils/connect');
+
 var Sequelize= require('sequelize');
 // var branch_details = require('./models/branch');
 // var product_details = require('./models/product');

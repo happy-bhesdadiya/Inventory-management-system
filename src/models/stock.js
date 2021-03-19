@@ -1,9 +1,8 @@
 const Sequelize=require('sequelize');
 const sequelize = require('../utils/connect');
-
 const stock=sequelize.define('stock',{
     id:{
-        type:Sequelize.BIGINT,
+        type:Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
@@ -25,7 +24,7 @@ const stock=sequelize.define('stock',{
         allowNull:false
     },
     price_per_product:{
-        type:Sequelize.FLOAT,
+        type:Sequelize.INTEGER,
         allowNull:false
     }
 })

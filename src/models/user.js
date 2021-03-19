@@ -3,7 +3,7 @@ const sequelize = require('../utils/connect');
 const branch=require('./branch')
 const user=sequelize.define('user',{
   id:{
-    type:Sequelize.BIGINT,
+    type:Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true
@@ -36,6 +36,16 @@ const user=sequelize.define('user',{
   token: {
     type:Sequelize.STRING,
     allowNull:false
+  },
+  created_at: {
+    type: 'TIMESTAMP',
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    allowNull: false
+  },
+  updated_at: {
+    type: 'TIMESTAMP',
+    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    allowNull: false
   }
 
     

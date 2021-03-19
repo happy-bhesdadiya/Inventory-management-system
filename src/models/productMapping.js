@@ -3,10 +3,9 @@ const sequelize = require('../utils/connect');
 const user=require('./user');
 const product=require('./product');
 const branch = require('./branch');
-
 const productMapping=sequelize.define('productMapping',{
     id:{
-        type:Sequelize.BIGINT,
+        type:Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
