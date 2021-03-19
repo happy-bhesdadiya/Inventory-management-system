@@ -3,12 +3,12 @@ const sequelize = require('../utils/connect');
 
 const product=sequelize.define('product',{
     id:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.BIGINT,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    product_name: {
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -16,9 +16,6 @@ const product=sequelize.define('product',{
         type:Sequelize.BOOLEAN,
         defaultValue:true
     }
-    },
-    {
-        timestamps:false
     }
 )
 module.exports=product

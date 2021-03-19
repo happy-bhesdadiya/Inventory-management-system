@@ -3,12 +3,12 @@ const sequelize = require('../utils/connect');
 
 const stock=sequelize.define('stock',{
     id:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.BIGINT,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    productname:{
+    product_name:{
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -20,7 +20,7 @@ const stock=sequelize.define('stock',{
         type:Sequelize.INTEGER,
         allowNull:false
     },
-    productimage:{
+    product_image:{
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -28,8 +28,5 @@ const stock=sequelize.define('stock',{
         type:Sequelize.FLOAT,
         allowNull:false
     }
-},
-{
-    timestamps:false
 })
 module.exports=stock

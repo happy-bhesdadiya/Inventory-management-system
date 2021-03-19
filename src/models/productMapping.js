@@ -6,14 +6,14 @@ const branch = require('./branch');
 
 const productMapping=sequelize.define('productMapping',{
     id:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.BIGINT,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
    issued_date:{
     type: DATE,
-    allowNull: true
+    defaultValue:null
    },
    returned_date:{
     type: DATE,
@@ -23,9 +23,6 @@ const productMapping=sequelize.define('productMapping',{
        type:Sequelize.STRING,
        defaultValue:"pending"
     }
-},
-{
-    timestamps:false
 })
 
 user.hasOne(productMapping,{foriegnKey:user.id})

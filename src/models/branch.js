@@ -2,12 +2,12 @@ const Sequelize=require('sequelize');
 const sequelize = require('../utils/connect');
 const branch=sequelize.define('branch',{
     id:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.BIGINT,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    branchname:{ 
+    branch_name:{ 
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -17,9 +17,6 @@ const branch=sequelize.define('branch',{
         
     }
         
-},
-    {
-        timestamps:false
-    }
+}
 )
 module.exports=branch

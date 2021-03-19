@@ -3,16 +3,17 @@ const sequelize = require('../utils/connect');
 const branch=require('./branch')
 const user=sequelize.define('user',{
   id:{
-    type:Sequelize.INTEGER,
+    type:Sequelize.BIGINT,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true
   },
-  username: {
+  user_name: {
     type:Sequelize.STRING,
     allowNull:false
   },
   profile_image: {
+    
     type:Sequelize.STRING,
     allowNull:false
   },
