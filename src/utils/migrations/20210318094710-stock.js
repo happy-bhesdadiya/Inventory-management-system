@@ -10,9 +10,9 @@ module.exports = {
      */
      await queryInterface.createTable('stock', {
       id:{
-        type:Sequelize.UUID,
+        type: Sequelize.INTEGER,
+         autoIncrement: true,
         primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
     },
     productname: Sequelize.STRING,
      available_qty:Sequelize.INTEGER,

@@ -7,7 +7,7 @@ const branch=sequelize.define('branch',{
         allowNull: false,
         primaryKey: true
     },
-    branchname:{ 
+    branch_name:{ 
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -17,9 +17,6 @@ const branch=sequelize.define('branch',{
         
     }
         
-},
-    {
-        timestamps:false
-    }
+}
 )
 module.exports=branch

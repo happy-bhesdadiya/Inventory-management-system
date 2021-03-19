@@ -10,9 +10,9 @@ module.exports = {
      */
      await queryInterface.createTable('product', { 
       id:{
-        type:Sequelize.UUID,
-        primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+       primaryKey:true,
         },
       name: Sequelize.STRING,
       is_available:Sequelize.BOOLEAN

@@ -3,7 +3,6 @@ const sequelize = require('../utils/connect');
 const user=require('./user');
 const product=require('./product');
 const branch = require('./branch');
-const { DATE } = require('sequelize');
 const productMapping=sequelize.define('productMapping',{
     id:{
         type:Sequelize.INTEGER,
@@ -12,20 +11,17 @@ const productMapping=sequelize.define('productMapping',{
         primaryKey: true
     },
    issued_date:{
-    type: DATE,
-    allowNull: true
+    type: Sequelize.DATE,
+    defaultValue:null
    },
    returned_date:{
-    type: DATE,
+    type: Sequelize.DATE,
     defaultValue:null
    }  ,
    status:{
        type:Sequelize.STRING,
        defaultValue:"pending"
     }
-},
-{
-    timestamps:false
 })
 
 user.hasOne(productMapping,{foriegnKey:user.id})

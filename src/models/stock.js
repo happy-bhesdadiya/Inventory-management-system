@@ -7,7 +7,7 @@ const stock=sequelize.define('stock',{
         allowNull: false,
         primaryKey: true
     },
-    productname:{
+    product_name:{
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -19,16 +19,13 @@ const stock=sequelize.define('stock',{
         type:Sequelize.INTEGER,
         allowNull:false
     },
-    productimage:{
+    product_image:{
         type:Sequelize.STRING,
         allowNull:false
     },
     price_per_product:{
-        type:Sequelize.FLOAT,
+        type:Sequelize.INTEGER,
         allowNull:false
     }
-},
-{
-    timestamps:false
 })
 module.exports=stock

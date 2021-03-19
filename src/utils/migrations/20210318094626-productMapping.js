@@ -10,16 +10,41 @@ module.exports = {
      */
      await queryInterface.createTable('productMapping', {
       id:{
-        type:Sequelize.UUID,
+        type: Sequelize.INTEGER,
+         autoIncrement: true,
         primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
            },
+           product_id:{
+            type:Sequelize.INTEGER,
+            onDelete: 'CASCADE',
+            references: {
+              model: 'product',
+              key: 'id'
+            }
+          },
+          assigned_by:{
+            type:Sequelize.INTEGER,
+            onDelete: 'CASCADE',
+            references: {
+              model: 'user',
+              key: 'id'
+            }
+          },
+          assigned_to:{
+            type:Sequelize.INTEGER,
+            onDelete: 'CASCADE',
+            references: {
+              model: 'user',
+              key: 'id'
+            }
+          },
+          
       issued_date:{
-        type: 'TIMESTAMP',
+        type: Sequelize.DATE,
         allowNull: true
             },
       returned_date:{
-        type: 'TIMESTAMP',
+        type:Sequelize.DATE,
         allowNull: true
             }  ,
       status:Sequelize.STRING

@@ -13,15 +13,15 @@ module.exports = {
     */
      await queryInterface.bulkInsert('branch', [
        {
-         id:12344,
+        // id:'1',
          branchname:"Time Square 12 floor"
         },
         {
-          id:1242344,
-          branchname:"Time Square 12 floor"
+          //id:'2',
+          branchname:"Time Square 8 floor"
          },
          {
-          id:1234435,
+         // id:'3',
           branchname:"GIFT CITY"
          }
       ] ,{});

@@ -7,7 +7,7 @@ const product=sequelize.define('product',{
         allowNull: false,
         primaryKey: true
     },
-    name: {
+    product_name: {
         type:Sequelize.STRING,
         allowNull:false
     },
@@ -15,9 +15,6 @@ const product=sequelize.define('product',{
         type:Sequelize.BOOLEAN,
         defaultValue:true
     }
-    },
-    {
-        timestamps:false
     }
 )
 module.exports=product

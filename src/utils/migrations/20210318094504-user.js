@@ -10,14 +10,22 @@ module.exports = {
      */
      await queryInterface.createTable('user', { 
       id:{
-        type:Sequelize.UUID,
-        primaryKey:true,
-        defaultValue:Sequelize.UUIDV4
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+       primaryKey:true,
     },
     username: Sequelize.STRING,
     profile_image:Sequelize.STRING,
      email:Sequelize.STRING,
       password:Sequelize.STRING,
+      branch_id:{
+        type:Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'branch',
+          key: 'id'
+        }
+      },
         is_admin: {
             type:Sequelize.BOOLEAN,
         default:false},
@@ -34,8 +42,13 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
       }
+      
       });
   },
+
+
+
+  //npx sequelize-cli db:migrate --to20210318094804-user.js
 
   down: async (queryInterface, Sequelize) => {
     /**
