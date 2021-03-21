@@ -8,14 +8,15 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-     await queryInterface.createTable('branches',{ 
+     await queryInterface.createTable('branch',{ 
       id:
        { 
-        type: Sequelize.INTEGER,
-         autoIncrement: true,
-        primaryKey:true,
+         type:Sequelize.UUID,
+         
+         defaultValue:Sequelize.UUIDV4,
+         primaryKey:true,
        } ,
-     branch_name: Sequelize.STRING,
+     branchname: Sequelize.STRING,
      is_active:
      {
        type:Sequelize.BOOLEAN,
@@ -31,6 +32,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-     await queryInterface.dropTable('branches');
+     await queryInterface.dropTable('branch');
   }
 };
