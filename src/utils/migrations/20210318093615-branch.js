@@ -15,7 +15,7 @@ module.exports = {
         autoIncrement: true,
        primaryKey:true,
        } ,
-     branchname: Sequelize.STRING,
+     branch_name: Sequelize.STRING,
      is_active:
      {
        type:Sequelize.BOOLEAN,
