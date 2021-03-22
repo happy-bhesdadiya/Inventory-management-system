@@ -19,11 +19,14 @@ const user=sequelize.define('user',{
   },
   email: {
     type:Sequelize.STRING,
-    allowNull:false
+    allowNull:false,
+    unique:true
   },
   password: {
     type:Sequelize.STRING,
-    allowNull:false
+    allowNull:false,
+    minlength:8
+    
   },
   is_admin: {
       type:Sequelize.BOOLEAN,
@@ -39,18 +42,22 @@ const user=sequelize.define('user',{
   },
   created_at: {
     type: 'TIMESTAMP',
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    defaultValue:  Sequelize.NOW,
     allowNull: false
   },
   updated_at: {
     type: 'TIMESTAMP',
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+    defaultValue:  Sequelize.NOW,
     allowNull: false
-  }
+  },
+  branch_id: {
+    type: Sequelize.INTEGER,
+    references: {
+       model: 'branch', // 'fathers' refers to table name
+       key: 'id', // 'id' refers to column name in fathers table
+    }
+ } 
 
-    
+},{timestamps:false})
 
-})
-
-branch.hasOne(user,{foreignKey:branch.id})
 module.exports=user
