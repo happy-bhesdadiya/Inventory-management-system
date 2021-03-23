@@ -9,6 +9,8 @@ var Sequelize= require('sequelize');
 // var stock_details = require('./models/stock');
 // var user_details = require('./models/user');
 var adminRoutes=require('./routes/adminRoutes')
+var employeeRoutes=require('./routes/employeeRoutes')
+
 var app = express();
 
 //app.use(express.json());
@@ -16,8 +18,9 @@ var app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true}))
 
-app.use('/admin',adminRoutes)
+//app.use('/admin',adminRoutes)
 
+app.use('/employee',employeeRoutes)
 
 sequelize
         .authenticate()

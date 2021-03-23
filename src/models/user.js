@@ -53,8 +53,8 @@ const user=sequelize.define('user',{
   branch_id: {
     type: Sequelize.INTEGER,
     references: {
-       model: 'branch', // 'fathers' refers to table name
-       key: 'id', // 'id' refers to column name in fathers table
+       model: 'branch',
+       key: 'id', 
     }
  } 
 
