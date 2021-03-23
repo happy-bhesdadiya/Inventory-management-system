@@ -125,7 +125,7 @@ router.post('/getRequests',authenticateJWT,async(req,res)=>{
      const  result=await product.findOne({attributes:['product_name'], where:{id:product_id}})
       
                           if(status==='pending'){
-                            res.json({
+                          return  res.json({
                               is_error: false,
                               send:{ status,
                                   product_id,
@@ -133,16 +133,15 @@ router.post('/getRequests',authenticateJWT,async(req,res)=>{
                               }
                           })
                           }
-                       return  res.send({data,result})
-                          //  return res.json({
-                          //     is_error: false,
-                          //     send:{ 
-                          //         data,
-                          //         result
-                          //     }
-                          // })
+                       
+                           return res.json({
+                              is_error: false,
+                              send:{ 
+                                  data,
+                                  result
+                              }
+                          })
                         
-                 
       })
   }) 
   
