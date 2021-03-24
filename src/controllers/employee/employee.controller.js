@@ -53,13 +53,13 @@ const employeeSignUp = async (req, res, next) => {
                } else {
                     const hashedPassword = await securePassword(req.body.password);
                     const newEmployee = await User.create({
-                         user_name: req.body.name,
-                         email: req.body.email,
-                         password: hashedPassword,
-                         mobile: req.body.mobile,
-                         branch_id: req.body.branch_id,
-                         is_active: req.body.is_active,
-                         is_admin: req.body.is_admin,
+                        user_name: req.body.name,
+                        email: req.body.email,
+                        password: hashedPassword,
+                        mobile_number: req.body.mobile_number,
+                        branch_id: req.body.branch_id,
+                        is_active: req.body.is_active,
+                        is_admin: req.body.is_admin,
                     });
                     if (newEmployee) {
                          const tokenOriginal = await tokenGeneration({ id: newEmployee.id });
