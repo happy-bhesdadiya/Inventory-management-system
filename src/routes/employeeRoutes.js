@@ -11,6 +11,6 @@ router.post("/signup", employeeValidation, employeeSignUp);
 
 router.get("/viewProfile", authenticate, employeeViewProfile);
 
-router.post("/updateProfile",authenticate,updateProfile)
+router.post("/updateProfile",authenticate,employeeValidation,updateProfile)
 
 module.exports = router;
