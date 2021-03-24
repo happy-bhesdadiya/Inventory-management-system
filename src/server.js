@@ -23,8 +23,8 @@ const startServer = async () => {
     try {
         await sequelize.authenticate();
         console.log("Connected to DB Successfully!");
-        await sequelize.sync({ force: true });
-        // await sequelize.sync();
+       // await sequelize.sync({ force: true });
+         await sequelize.sync();
         // await addBranches();
         server.listen(port, () => {
             console.log(`Server Started on Port: ${port}`);
