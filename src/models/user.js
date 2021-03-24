@@ -25,7 +25,7 @@ const User = sequelize.define(
             allowNull: false,
         },
         mobile_number: {
-            type: Sequelize.NUMBER,
+            type: Sequelize.BIGINT,
             allowNull: false,
         },
         branch_id: {
