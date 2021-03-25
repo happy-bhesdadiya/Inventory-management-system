@@ -1,6 +1,7 @@
 require("dotenv").config();
 const errorFunction = require("./../../utils/errorFunction");
 const User = require("./../../models/user");
+const productMapping=require("./../../models/productMapping")
 const emailRegEx = RegExp(/^[a-zA-Z0-9._]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 const { securePassword } = require("../../utils/securePassword");
 const { tokenGeneration } = require("../../utils/jwtTokens");
@@ -60,6 +61,7 @@ const employeeSignUp = async (req, res, next) => {
                         branch_id: req.body.branch_id,
                         is_active: req.body.is_active,
                         is_admin: req.body.is_admin,
+                        profile_image:req.body.profile_image
                     });
                     if (newEmployee) {
                          const tokenOriginal = await tokenGeneration({ id: newEmployee.id });
@@ -88,6 +90,69 @@ const employeeSignUp = async (req, res, next) => {
           console.log("Error Adding Employee : ", error);
           return res.json(errorFunction(true, "Something Went Wrong", error));
      }
+}
+
+const employeeGetRequests= async (req,res,next)=>{
+     const data=await productMapping.findAll({attributes:['status','product_id','assigned_by'], where:{assigned_to:req.body.id}})
+     .then((data)=>{
+     data.forEach(async(element)=>{
+         var product_id=element.dataValues.product_id
+         var status=element.dataValues.status
+        const  result=await product.findOne({attributes:['product_name'], where:{id:product_id}})
+         
+                             if(status==='pending'){
+                             return  res.json({
+                                 is_error: false,
+                                 send:{ status,
+                                     product_id,
+                                     result
+                                 }
+                             })
+                             }
+                          
+                              return res.json({
+                                 is_error: false,
+                                 send:{ 
+                                     data,
+                                     result
+                                 }
+                             })
+                           
+         })
+     }) 
+     
+     .catch((err) => {
+       var error = {
+         is_error: true,
+         message: err,
+       };
+       console.log(error);
+       return res.status(500).send(error);
+     });
+}
+
+const employeeLogout=async(req,res,next)=>{
+
+     const result=await User.update({token:"",is_active:0},{where:{id:req.body.id}})
+     
+    const data=await User.findOne({attributes:['user_name','profile_image','branch_id','email','is_admin','is_active','token'],  where:{id:req.body.id}})
+     .then((data) => {
+        res.json({
+          is_error: false,
+          message: "user logout!",
+          data
+        });
+        return res.status(200).send();
+      })
+      .catch((err) => {
+        var error = {
+          is_error: true,
+          message: err,
+        };
+        console.log(error);
+        return res.status(500).send(error);
+      });
+
 }
 
 const employeeViewProfile = async (req, res, next) => {
@@ -144,5 +209,5 @@ const updateProfile=async(req,res,next)=>{
 }
 
 module.exports = {
-     employeeLogin, employeeSignUp, employeeViewProfile,updateProfile
+     employeeLogin, employeeSignUp, employeeViewProfile,updateProfile,employeeGetRequests,employeeLogout
 }
