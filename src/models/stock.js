@@ -1,0 +1,35 @@
+const Sequelize=require('sequelize');
+const sequelize = require('../utils/connect');
+const stock=sequelize.define('stock',{
+    id:{
+        type:Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    product_name:{
+        type:Sequelize.STRING,
+        allowNull:false
+    },
+    available_qty:{
+        type:Sequelize.INTEGER,
+        allowNull:false
+    },
+    total_qty:{
+        type:Sequelize.INTEGER,
+        allowNull:false
+    },
+    product_image:{
+        type:Sequelize.STRING,
+        allowNull:false
+    },
+    price_per_product:{
+        type:Sequelize.INTEGER,
+        allowNull:false
+    },
+    status:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:true
+    }
+},{timestamps:false})
+module.exports=stock
