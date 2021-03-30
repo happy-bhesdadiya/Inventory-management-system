@@ -47,6 +47,48 @@ const updateProfile = async (req, res, next) =>{
           return res.json(errorFunction(true, "Something Went Wrong"));
     }
 }
+
+const addAdmin = async (req, res, next) =>{
+    try {
+        console.log("Inside Add Admin  Profile")
+          const admin=await getUserFromSession(req,res);
+          console.log(admin.id);
+          const existingAdmin = await User.findOne({ where: { id: admin.id,is_admin:true} });
+          if(!existingAdmin)
+          {
+               res.status(404);
+                    return res.json(errorFunction(true, "Only Admin Have Rights To Add Another Admin"));
+          }
+          const hashedPassword = await securePassword(req.body.password);
+          const newEmployee = await User.create({
+            user_name: req.body.name,
+            email: req.body.email,
+            password: hashedPassword,
+            mobile_number: req.body.mobile_number,
+            branch_id: req.body.branch_id,
+            profile_pic:req.body.profile_pic,
+            is_active: 1,
+            is_admin: true,
+        });
+        if (newEmployee) 
+           {
+            res.status(201);
+            return res.json(errorFunction(false, "Admin Added Successfully", { newEmployee }));
+           }
+           else{
+               res.status(404);
+               return res.json(errorFunction(true, "Add Admin Failed  "));
+               
+           } 
+
+        
+    } catch (error) {
+        res.status(501);
+        return res.json(errorFunction(true, "Something Went Wrong"));
+    }
+}
+
+
 module.exports={
-    updateProfile
+    updateProfile,addAdmin
 }
