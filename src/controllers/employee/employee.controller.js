@@ -1,11 +1,15 @@
 require("dotenv").config();
 const errorFunction = require("./../../utils/errorFunction");
 const User = require("./../../models/user");
+const Stock = require("./../../models/stock");
+const Product = require("./../../models/product");
+const ProductMapping = require("./../../models/productMapping");
 const emailRegEx = RegExp(/^[a-zA-Z0-9._]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 const { securePassword } = require("../../utils/securePassword");
 const { tokenGeneration } = require("../../utils/jwtTokens");
 const Cryptr = require("cryptr");
 const getUserFromSession = require("../../utils/getUser");
+const { Sequelize } = require("../../utils/connect");
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 
 const sevenDays = 7 * 24 * 60 * 60 * 1000;
@@ -58,7 +62,7 @@ const employeeSignUp = async (req, res, next) => {
                         password: hashedPassword,
                         mobile_number: req.body.mobile_number,
                         branch_id: req.body.branch_id,
-                        is_active: req.body.is_active,
+                        is_active: 1,
                         is_admin: req.body.is_admin,
                     });
                     if (newEmployee) {
@@ -105,6 +109,44 @@ const employeeViewProfile = async (req, res, next) => {
           return res.json(errorFunction(true, "Something Went Wrong", error));
      }
 }
+const aquireProduct = async (req,res,next)=>{
+     const {stock_id}=req.body;
+     try{
+          const employee = await getUserFromSession(req,res);
+          if(employee){
+               const isStockexistsandAvailable = await Stock.findOne({where:Sequelize.and({id:stock_id},{[available_qty.ne]:0})});
+               if(isStockexistsandAvailable){ for(var i in isStockexistsandAvailable.total_qty){
+                    var checkname= isStockexistsandAvailable.product_name +" "+ i.toString();
+                    const availableProduct= await Product.findOne({where:Sequelize.and({product_name:checkname},{is_available:1})})
+                    if(availableProduct){
+                         const newProductMap = await ProductMapping.create({
+                              product_id:availableProduct.id,
+                              assigned_to:employee.id,
+                              status:"pending"
+                         })
+                         availableProduct.update({is_available:0})
+                         res.status(200);
+                         return res.json(errorFunction(false, "Your Request Has been sent to the Admin"));          
+                    }
+               }
+
+          }
+          else{
+               res.status(404);
+               return res.json(errorFunction(true, "Either This product is wrong or it is out of stock"));  
+          }
+     }
+     else {
+          res.status(404);
+          return res.json(errorFunction(true, "Unauthenticated Employee"));
+     }
+}
+
+catch(error){
+     res.status(501);
+     return res.json(errorFunction(true, "Something Went Wrong", error));
+}
+}
 
 
 
@@ -144,5 +186,5 @@ const updateProfile=async(req,res,next)=>{
 }
 
 module.exports = {
-     employeeLogin, employeeSignUp, employeeViewProfile,updateProfile
+     employeeLogin, employeeSignUp, employeeViewProfile,updateProfile,aquireProduct
 }
