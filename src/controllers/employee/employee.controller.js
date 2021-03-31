@@ -109,6 +109,40 @@ const employeeViewProfile = async (req, res, next) => {
           return res.json(errorFunction(true, "Something Went Wrong", error));
      }
 }
+const updateProfile=async(req,res,next)=>{
+     try{
+          console.log("Inside Update Profile")
+          const employee=await getUserFromSession(req,res);
+          console.log(employee.email);
+          const existingEmployee = await User.findOne({ where: { email: employee.email } });
+          if(!existingEmployee)
+          {
+               res.status(404);
+                    return res.json(errorFunction(true, "Employee Not Found"));
+          }
+          const hashedPassword = await securePassword(req.body.password);
+          const c1= await User.update({user_name:req.body.name,mobile_number:req.body.mobile_number,password:hashedPassword,branch_id:req.body.branch_id,profile_pic:req.body.profile_pic,is_admin:req.body.is_admin,is_active:req.body.is_active},{where:{
+              email:req.body.email
+           }})
+           if(c1[0]===1)
+           {
+               res.status(200);
+               const emp = await User.findOne({ where: { email: employee.email } });
+               return res.json(errorFunction(false, "Employee Data Updated Succesfully",emp));
+           }
+           else{
+               res.status(404);
+               return res.json(errorFunction(true, "Employee Data  Not Updated "));
+               
+           } 
+
+     }
+     catch(e)
+     {
+          res.status(501);
+          return res.json(errorFunction(true,"Something went wrong",e))
+     }
+}
 const aquireProduct = async (req,res,next)=>{
      const {stock_id}=req.body;
      try{
@@ -150,5 +184,5 @@ const aquireProduct = async (req,res,next)=>{
      }
 }
 module.exports = {
-     employeeLogin, employeeSignUp, employeeViewProfile,aquireProduct
+     employeeLogin, employeeSignUp, employeeViewProfile,aquireProduct,updateProfile
 }

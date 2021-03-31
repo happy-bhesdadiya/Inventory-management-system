@@ -1,14 +1,21 @@
-const express = require("express");
-const { employeeLogin, employeeSignUp, employeeViewProfile , aquireProduct} = require("./../controllers/employee/employee.controller");
-const employeeValidation = require("./../controllers/employee/employee.validator");
-const authenticate = require("./../utils/authentication");
+const express = require('express');
+const {
+  employeeLogin,
+  employeeSignUp,
+  employeeViewProfile,
+  aquireProduct,
+  updateProfile,
+} = require('./../controllers/employee/employee.controller');
+const employeeValidation = require('./../controllers/employee/employee.validator');
+const authenticate = require('./../utils/authentication');
 
 const router = express.Router();
 
-router.post("/login", employeeLogin);
+router.post('/login', employeeLogin);
 
-router.post("/signup", employeeValidation, employeeSignUp);
+router.post('/signup', employeeValidation, employeeSignUp);
 
-router.get("/viewProfile", authenticate, employeeViewProfile);
-router.post("/aquireProduct",aquireProduct);
+router.get('/viewProfile', authenticate, employeeViewProfile);
+router.post('/updateProfile', authenticate, employeeValidation, updateProfile);
+router.post('/aquireProduct', authenticate, aquireProduct);
 module.exports = router;
