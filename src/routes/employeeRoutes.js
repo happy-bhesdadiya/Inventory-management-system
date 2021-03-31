@@ -16,6 +16,6 @@ router.post('/login', employeeLogin);
 router.post('/signup', employeeValidation, employeeSignUp);
 
 router.get('/viewProfile', authenticate, employeeViewProfile);
+router.post('/aquireProduct', aquireProduct);
 router.post('/updateProfile', authenticate, employeeValidation, updateProfile);
-router.post('/aquireProduct', authenticate, aquireProduct);
 module.exports = router;
