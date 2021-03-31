@@ -17,7 +17,7 @@ const sevenDays = 7 * 24 * 60 * 60 * 1000;
 const employeeLogin = async (req, res, next) => {
   try {
     const { email, password, is_admin } = req.body;
-    if (emailRegEx.test(email) && password.length > 8) {
+    if (emailRegEx.test(email) && password.length >= 8) {
       const employee = await User.findOne({
         where: { email: email, is_admin: is_admin },
       });
@@ -123,7 +123,7 @@ const employeeViewProfile = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong', error));
   }
 };
-const updateProfile = async (req, res, next) => {
+const updateEmployeeProfile = async (req, res, next) => {
   try {
     console.log('Inside Update Profile');
     const employee = await getUserFromSession(req, res);
@@ -266,6 +266,6 @@ module.exports = {
   employeeLogin,
   employeeSignUp,
   employeeViewProfile,
-  updateProfile,
+  updateEmployeeProfile,
   aquireProduct,
 };

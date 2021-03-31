@@ -4,7 +4,7 @@ const {
   employeeSignUp,
   employeeViewProfile,
   aquireProduct,
-  updateProfile,
+  updateEmployeeProfile,
 } = require('./../controllers/employee/employee.controller');
 const employeeValidation = require('./../controllers/employee/employee.validator');
 const authenticate = require('./../utils/authentication');
@@ -17,5 +17,10 @@ router.post('/signup', employeeValidation, employeeSignUp);
 
 router.get('/viewProfile', authenticate, employeeViewProfile);
 router.post('/aquireProduct', aquireProduct);
-router.post('/updateProfile', authenticate, employeeValidation, updateProfile);
+router.post(
+  '/updateProfile',
+  authenticate,
+  employeeValidation,
+  updateEmployeeProfile
+);
 module.exports = router;
