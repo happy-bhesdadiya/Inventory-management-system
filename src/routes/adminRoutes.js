@@ -6,13 +6,18 @@ const {
   updateUser,
   getRemovedUsers,
   removeStock,
+  addStock
 } = require('./../controllers/admin/admin.controller');
-const employeeValidation = require('./../controllers/admin/admin.validator');
+//const adminValidation = require('./../controllers/admin/admin.validator');
+const {adminValidation,
+  stockValidation}=require('./../controllers/admin/admin.validator')
+//const stockValidation = require('./../controllers/admin/admin.validator');
 const authenticate = require('./../utils/authentication');
 
 const router = express.Router();
-router.post('/updateProfile', authenticate, employeeValidation, updateProfile);
-router.post('/addAdmin', authenticate, employeeValidation, addAdmin);
+router.post('/updateProfile', authenticate, adminValidation, updateProfile);
+router.post('/addAdmin', authenticate, adminValidation, addAdmin);
+router.post('/addStock', authenticate,stockValidation,addStock);
 router.get('/getUsers', getUsers);
 
 router.post('/updateUser', updateUser);

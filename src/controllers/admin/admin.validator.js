@@ -31,4 +31,36 @@ const adminValidation = (req, res, next) => {
     }
 }
 
-module.exports = adminValidation;
+const validationStock = Joi.object({
+     product_name: Joi.string().required().trim(true),
+     available_qty: Joi.number().required(),
+     total_qty: Joi.number().required(),
+     product_image: Joi.string().default(""),
+     price_per_product: Joi.number().required(),
+    
+});
+
+const stockValidation = (req, res, next) => {
+     const incomingData = {
+          product_name: req.body.product_name,
+          available_qty: req.body.total_qty,
+          total_qty: req.body.total_qty,
+          product_image: req.body.product_image,
+          price_per_product: req.body.price_per_product,
+     };
+     const { error } = validationStock.validate(incomingData);
+     if (error) {
+          res.status(406);
+          console.log("Error in Stock Data : ", error);
+          return res.json(errorFunction(true, "Error in Stock Data", error));
+     } else {
+          next();
+     }
+ }
+
+
+
+module.exports  = {
+     adminValidation,
+     stockValidation
+};
