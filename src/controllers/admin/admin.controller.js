@@ -232,6 +232,7 @@ const addStock = async (req, res, next) =>{
         }
         if (newProduct) 
          {
+           
           res.status(201);
           return res.json(errorFunction(false, "Stock Added Successfully", { newProduct }));
          }
@@ -248,6 +249,71 @@ const addStock = async (req, res, next) =>{
       }
 }
 
+
+
+const updateStock = async (req, res, next) =>{
+  try {
+      console.log("Inside Update Stock  Route")
+      const admin=await getUserFromSession(req,res);
+      console.log(admin.id);
+      const existingAdmin = await User.findOne({ where: { id: admin.id,is_admin:true} });
+      if(!existingAdmin)
+      {
+           res.status(404);
+                return res.json(errorFunction(true, "Only Admin Have Rights To Update Stock Items"));
+      }
+
+      const singleitem = await Stock.findOne({ where: { id: req.body.id} });
+      console.log(singleitem.product_name);
+      const c1= await Stock.update({product_name:req.body.product_name,
+        available_qty:req.body.available_qty,
+      total_qty:req.body.total_qty,product_image:req.body.product_image,
+    price_per_product:req.body.price_per_product},{where:{
+        id:req.body.id
+      }})
+     // console.log(c1)
+    //console.log("this is console",singleitem.total_qty)
+   
+         for (j = 1; j <=singleitem.total_qty; j++) {
+          //text += cars[i] + "<br>";
+          //product_name: req.body.product_name +[j];
+        console.log(singleitem.product_name +[j])
+          const products = await Product.destroy({where:{
+            product_name:singleitem.product_name +[j]
+        }})
+        }
+
+        console.log(req.body.total_qty)
+        for (j = 1; j <= req.body.total_qty; j++) {
+         //text += cars[i] + "<br>";
+         const products = await Product.create({
+             product_name: req.body.product_name +[j],
+             is_available:true
+         });
+        }
+    if(c1[0]===1)
+    {
+      res.status(201);
+      const updatedstock = await Stock.findOne({ where: { id: req.body.id } });
+         return res.json(errorFunction(false, "Stock Updated Successfully", { updatedstock }));
+    }
+    else{
+      res.status(404);
+              return res.json(errorFunction(true, "Stock updation Failed  "));
+    } 
+       
+      
+  
+}
+      
+  catch (error) {
+          res.status(501);
+          return res.json(errorFunction(true, "Something Went Wrong" + error));
+      }
+}
+
+
+
 module.exports = {
   updateProfile,
   addAdmin,
@@ -255,5 +321,6 @@ module.exports = {
   updateUser,
   getRemovedUsers,
   removeStock,
-  addStock
+  addStock,
+  updateStock
 };
