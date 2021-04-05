@@ -10,6 +10,7 @@ const { tokenGeneration } = require('../../utils/jwtTokens');
 const Cryptr = require('cryptr');
 const getUserFromSession = require('../../utils/getUser');
 const { Sequelize } = require('../../utils/connect');
+
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 
 const sevenDays = 7 * 24 * 60 * 60 * 1000;
@@ -162,7 +163,9 @@ const viewRequests = async (req, res) => {
     } else {
       try {
         const pendingRequests = await ProductMapping.findAll({
-          status: 'pending',
+          where: {
+            status: 'pending',
+          },
         });
         if (pendingRequests) {
           return res.status(200).send(pendingRequests);
@@ -200,54 +203,130 @@ const removeStock = async (req, res) => {
     res.status(400).send(e);
   }
 };
-
-
-const addStock = async (req, res, next) =>{
+const resRequests = async (req, res, next) => {
   try {
-      console.log("Inside Add Stock  Route")
-      const admin=await getUserFromSession(req,res);
-      console.log(admin.id);
-      const existingAdmin = await User.findOne({ where: { id: admin.id,is_admin:true} });
-      if(!existingAdmin)
-      {
-           res.status(404);
-                return res.json(errorFunction(true, "Only Admin Have Rights To Add Stock Items"));
-      }
-      
-      const newProduct = await Stock.create({
-          product_name: req.body.product_name,
-          available_qty: req.body.total_qty,
-          total_qty: req.body.total_qty,
-          product_image: req.body.product_image,
-          price_per_product: req.body.price_per_product,
-      });
-      
-         let i=req.body.total_qty;
-         for (j = 1; j <= i; j++) {
-          //text += cars[i] + "<br>";
-          const products = await Product.create({
-              product_name: req.body.product_name +[j],
-              is_available:true
+    const admin = await getUserFromSession(req, res);
+    console.log(admin.id);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (!existingAdmin) {
+      res.status(404);
+      return res.json(errorFunction(true, 'Only Admin Can see requests'));
+    } else {
+      if (req.body.is_accept) {
+        var request = await ProductMapping.findOne({
+          where: {
+            id: req.body.request_id,
+          },
+        });
+        if (request) {
+          await request.update({
+            issued_date: new Date(),
+            status: 'accepted',
+            assignedById: admin.id,
           });
+          res.status(200);
+          return res.json(errorFunction(false, 'Request accepted'));
+        } else {
+          res.status(404);
+          return res.json(errorFunction(true, 'No such request Found...!'));
         }
-        if (newProduct) 
-         {
-           
-          res.status(201);
-          return res.json(errorFunction(false, "Stock Added Successfully", { newProduct }));
-         }
-         else{
-             res.status(404);
-             return res.json(errorFunction(true, "Stock Insetion Failed  "));
-             
-         } 
-
-      } 
-  catch (error) {
-          res.status(501);
-          return res.json(errorFunction(true, "Something Went Wrong"+error));
+      } else {
+        var request = await ProductMapping.findOne({
+          where: {
+            id: req.body.request_id,
+          },
+        });
+        if (request) {
+          await request.update({
+            issued_date: new Date(),
+            status: 'rejected',
+            assignedById: admin.id,
+          });
+          var product = await Product.findOne({
+            where: {
+              id: request.productId,
+            },
+          });
+          if (product) {
+            await product.update({
+              is_available: 1,
+            });
+            var [name, id] = product.product_name.split('_');
+            var stock = await Stock.findOne({
+              where: {
+                product_name: name,
+              },
+            });
+            if (stock) {
+              await stock.increment('available_qty', { by: 1 });
+            } else {
+              res.status(404);
+              return res.json(errorFunction(true, 'No such Products in stock'));
+            }
+          } else {
+            res.status(404);
+            return res.json(errorFunction(true, 'No such Prouct in Products'));
+          }
+          res.status(200);
+          return res.json(errorFunction(false, 'Request accepted'));
+        } else {
+          res.status(404);
+          return res.json(errorFunction(true, 'No such request Found...!'));
+        }
       }
-}
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong' + error));
+  }
+};
+const addStock = async (req, res, next) => {
+  try {
+    console.log('Inside Add Stock  Route');
+    const admin = await getUserFromSession(req, res);
+    console.log(admin.id);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (!existingAdmin) {
+      res.status(404);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+      );
+    }
+
+    const newProduct = await Stock.create({
+      product_name: req.body.product_name,
+      available_qty: req.body.total_qty,
+      total_qty: req.body.total_qty,
+      product_image: req.body.product_image,
+      price_per_product: req.body.price_per_product,
+    });
+
+    let i = req.body.total_qty;
+    for (j = 1; j <= i; j++) {
+      //text += cars[i] + "<br>";
+      const products = await Product.create({
+        product_name: req.body.product_name + '_' + [j],
+        is_available: true,
+      });
+    }
+    if (newProduct) {
+      res.status(201);
+      return res.json(
+        errorFunction(false, 'Stock Added Successfully', { newProduct })
+      );
+    } else {
+      res.status(404);
+      return res.json(errorFunction(true, 'Stock Insetion Failed  '));
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong' + error));
+  }
+};
 
 
 
@@ -277,9 +356,9 @@ const updateStock = async (req, res, next) =>{
          for (j = 1; j <=singleitem.total_qty; j++) {
           //text += cars[i] + "<br>";
           //product_name: req.body.product_name +[j];
-        console.log(singleitem.product_name +[j])
+        console.log(singleitem.product_name +"_"+[j])
           const products = await Product.destroy({where:{
-            product_name:singleitem.product_name +[j]
+            product_name:singleitem.product_name +"_"+[j]
         }})
         }
 
@@ -287,7 +366,7 @@ const updateStock = async (req, res, next) =>{
         for (j = 1; j <= req.body.total_qty; j++) {
          //text += cars[i] + "<br>";
          const products = await Product.create({
-             product_name: req.body.product_name +[j],
+             product_name: req.body.product_name +"_"+[j],
              is_available:true
          });
         }
@@ -322,5 +401,7 @@ module.exports = {
   getRemovedUsers,
   removeStock,
   addStock,
-  updateStock
+  updateStock,
+  viewRequests,
+  resRequests,
 };
