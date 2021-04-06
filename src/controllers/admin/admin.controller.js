@@ -327,7 +327,72 @@ const addStock = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong' + error));
   }
 };
-
+var acceptedRequests = async (req, res, next) => {
+  try {
+    const admin = getUserFromSession(req, res);
+    console.log(admin.id);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (!existingAdmin) {
+      res.status(404);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+      );
+    } else {
+      var acceptedRequestsbyAdmin = await ProductMapping.findAll({
+        where: {
+          status: 'accpeted',
+          assignedById: admin.id,
+        },
+      });
+      if (!acceptedRequestsbyAdmin) {
+        res.status(404);
+        return res.json(
+          errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+        );
+      } else {
+        res.status(200).send(acceptedRequestsbyAdmin);
+      }
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong' + error));
+  }
+};
+var rejectedRequests = async (req, res, next) => {
+  try {
+    const admin = getUserFromSession(req, res);
+    console.log(admin.id);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (!existingAdmin) {
+      res.status(404);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+      );
+    } else {
+      var rejectedRequestsbyAdmin = await ProductMapping.findAll({
+        where: {
+          status: 'rejected',
+          assignedById: admin.id,
+        },
+      });
+      if (!rejectedRequestsbyAdmin) {
+        res.status(404);
+        return res.json(
+          errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+        );
+      } else {
+        res.status(200).send(rejectedRequestsbyAdmin);
+      }
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong' + error));
+  }
+};
 module.exports = {
   updateProfile,
   addAdmin,
@@ -338,4 +403,6 @@ module.exports = {
   addStock,
   viewRequests,
   resRequests,
+  acceptedRequests,
+  rejectedRequests,
 };

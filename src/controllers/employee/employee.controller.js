@@ -227,6 +227,90 @@ const aquireProduct = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong', error));
   }
 };
+const employeeGetRequests = async (req, res, next) => {
+  try {
+    const employee = await getUserFromSession(req, res);
+    if (employee) {
+      const data = await productMapping.findAll({
+        attributes: ['status', 'product_id', 'assigned_by'],
+        where: { assigned_to: employeee.id },
+      });
+      if (data) {
+        var response_array = [];
+        data.forEach(async (element) => {
+          var product_id = element.product_id;
+          var status = element.status;
+          const result = await product.findOne({
+            attributes: ['product_name'],
+            where: { id: product_id },
+          });
+          if (status === 'pending') {
+            response_array.push({
+              product_id: product_id,
+              status: status,
+              product_name: product_name,
+            });
+          } else {
+            response_array.push({
+              product_id: product_id,
+              status: status,
+              product_name: product_name,
+              assigned_by: element.assigned_by,
+            });
+          }
+        });
+        res.status(200);
+        return res.json(
+          errorFunction(false, 'Requests fatched succesfully', response_array)
+        );
+      } else {
+        res.status(404);
+        return res.json(
+          errorFunction(true, `You haven't made any requests yet`)
+        );
+      }
+    } else {
+      res.status(404);
+      return res.json(errorFunction(true, `Wrong User details`));
+    }
+  } catch (err) {
+    var error = {
+      is_error: true,
+      message: err,
+    };
+    console.log(error);
+    return res.status(500).send(error);
+  }
+};
+
+const employeeLogout = async (req, res, next) => {
+  try {
+    const employee = await getUserFromSession(req, res);
+    if (employee) {
+      const result = await User.update(
+        { token: '' },
+        { where: { id: employee.id } }
+      );
+      if (result) {
+        res.status(200);
+        return res.json(errorFunction(false, 'You have been logged out..!'));
+      } else {
+        res.status(404);
+        return res.json(errorFunction(true, `Wrong User details`));
+      }
+    } else {
+      res.status(404);
+      return res.json(errorFunction(true, `Wrong User details`));
+    }
+  } catch (err) {
+    var error = {
+      is_error: true,
+      message: err,
+    };
+    console.log(error);
+    return res.status(500).send(error);
+  }
+};
 
 module.exports = {
   employeeLogin,
@@ -234,4 +318,6 @@ module.exports = {
   employeeViewProfile,
   updateEmployeeProfile,
   aquireProduct,
+  employeeGetRequests,
+  employeeLogout,
 };
