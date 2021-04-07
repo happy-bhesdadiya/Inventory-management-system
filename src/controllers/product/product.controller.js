@@ -22,7 +22,7 @@ const getStock = async (req, res, next) => {
 
 const getStockId = async (req, res) => {
   try {
-    const stock = await Stock.findOne({ where: req.params.id });
+    const stock = await Stock.findOne({ where: { id: req.params.id } });
 
     if (stock) {
       res.status(200);

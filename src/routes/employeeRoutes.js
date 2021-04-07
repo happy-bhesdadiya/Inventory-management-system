@@ -25,12 +25,7 @@ router.post(
   employeeValidation,
   updateEmployeeProfile
 );
-router.post(
-  '/getRequests',
-  authenticate,
-  employeeValidation,
-  employeeGetRequests
-);
+router.post('/getRequests', authenticate, employeeGetRequests);
 
-router.post('/logout', authenticate, employeeValidation, employeeLogout);
+router.post('/logout', authenticate, employeeLogout);
 module.exports = router;

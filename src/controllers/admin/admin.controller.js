@@ -57,7 +57,6 @@ const updateProfile = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong'));
   }
 };
-
 const addAdmin = async (req, res, next) => {
   try {
     console.log('Inside Add Admin  Profile');
@@ -97,60 +96,170 @@ const addAdmin = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong'));
   }
 };
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
-    let admin = await User.findOne({ where: { id: req.body.id } });
-    if (admin.is_admin === true) {
-      let users = await User.findAll({ where: { is_active: '1' } });
-      res.status(200).send(users);
+    let admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
+      let users = await User.findAll({ where: { is_active: 1 } });
+      if (users) {
+        res.status(200);
+        return res.json(
+          errorFunction(false, 'Users data fetched Successfully', users)
+        );
+      } else {
+        res.status(403);
+        return res.json(
+          errorFunction(true, 'Something Went wrong while getting Users')
+        );
+      }
     } else {
-      res.send('only admin can see this');
+      res.status(403);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To See Users')
+      );
     }
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
   }
 };
-
-const updateUser = async (req, res) => {
+const getAllProducts = async (req, res, next) => {
   try {
-    let admin = await User.findOne({ where: { id: req.body.admin_id } });
-    if (admin.is_admin === true) {
+    var admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
+      const allProducts = await Product.findAll();
+      if (allProducts) {
+        res.status(200);
+        return res.json(
+          errorFunction(false, 'Showing Product details', allProducts)
+        );
+      } else if (allProducts.length === 0) {
+        res.status(200);
+        return res.json(errorFunction(false, 'Showing stock details', []));
+      } else {
+        res.status(400);
+        return res.json(errorFunction(true, 'Error showing Stock Details'));
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
+  }
+};
+const getProductById = async (req, res, next) => {
+  try {
+    var admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
+      const strid = req.params.id;
+      const id = parseInt(strid);
+      if (id === undefined || id < 0 || typeof id !== 'number') {
+        res.status(404);
+        return res.json(errorFunction(true, 'Error in Product ID'));
+      } else {
+        const product = await Product.findByPk(id);
+        if (product) {
+          res.status(200);
+          return res.json(
+            errorFunction(false, 'Showing Product Details', product)
+          );
+        } else {
+          res.status(404);
+          return res.json(errorFunction(true, 'Product Not Found'));
+        }
+      }
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
+  }
+};
+const updateUser = async (req, res, next) => {
+  try {
+    let admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
       // let array=['user_name','profile_image','email','password','is_admin','is_active']
       const {
+        user_id,
         user_name,
         profile_image,
         email,
+        mobile_number,
         password,
         is_admin,
         is_active,
       } = req.body;
-
-      await User.update(
-        { user_name, profile_image, email, password, is_admin, is_active },
-        { where: { id: req.body.user_id } }
-      ).then(res.status(200).send('data is upadated'));
+      var user = await User.update(
+        {
+          user_name,
+          profile_image,
+          email,
+          password,
+          mobile_number,
+          is_admin,
+          is_active,
+        },
+        { where: { id: user_id } }
+      );
+      if (user) {
+        res.status(200);
+        return res.json(errorFunction(false, 'User Value updated'));
+      } else {
+        res.status(403);
+        return res.json(errorFunction(true, 'user Value has not been updated'));
+      }
     } else {
-      res.send('only admin can see this');
+      res.status(403);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Update Users')
+      );
     }
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
   }
 };
-
-const getRemovedUsers = async (req, res) => {
+const getRemovedUsers = async (req, res, next) => {
   try {
-    let admin = await User.findOne({ where: { id: req.body.id } });
-    if (admin.is_admin === true) {
-      let users = await User.findAll({ where: { is_active: '0' } });
-      res.status(200).send(users);
+    let admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
+      let users = await User.findAll({ where: { is_active: 0 } });
+      if (users) {
+        res.status(200);
+        return res.json(
+          errorFunction(false, 'User has been fetched successfully', users)
+        );
+      } else {
+        res.status(403);
+        return res.json(errorFunction(true, 'user Value has not been fetched'));
+      }
     } else {
-      res.send('only admin can see this');
+      res.status(403);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Update Users')
+      );
     }
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
   }
 };
-const viewRequests = async (req, res) => {
+const viewRequests = async (req, res, next) => {
   try {
     const admin = await getUserFromSession(req, res);
     console.log(admin.id);
@@ -186,21 +295,57 @@ const viewRequests = async (req, res) => {
     res.status(400).send(error);
   }
 };
-const removeStock = async (req, res) => {
+const removeStock = async (req, res, next) => {
   try {
-    let admin = await User.findOne({ where: { id: req.body.admin_id } });
-    if (admin.is_admin === true) {
+    let admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
       let stock = await Stock.findOne({ where: { id: req.body.stock_id } });
       if (stock) {
-        stock.status = '0';
-        await stock.save();
-        res.status(200).send(stock);
+        var qty = stock.total_qty;
+        var pr_name = stock.product_name;
+        for (var i = 1; i <= qty; i++) {
+          var test_name = pr_name + '_' + i;
+          var product = await Product.findOne({
+            where: { product_name: test_name, is_available: 0 },
+          });
+          if (product) {
+            res.status(403);
+            return res.json(
+              errorFunction(
+                true,
+                'Sorry we can not delete this stock any item has been aquired or request by someone'
+              )
+            );
+          }
+        }
+        for (var i = 1; i <= qty; i++) {
+          var test_name = pr_name + '_' + i;
+          var product = await Product.findOne({
+            where: { product_name: test_name },
+          });
+          product.destroy();
+        }
+        stock.destroy();
+        res.status(201);
+        return res.json(errorFunction(false, 'Stock Deleted Successfully'));
+      } else {
+        res.status(403);
+        return res.json(
+          errorFunction(true, 'Stock Value has not been Updated')
+        );
       }
     } else {
-      res.send('only admin can see this');
+      res.status(403);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Update Users')
+      );
     }
-  } catch (e) {
-    res.status(400).send(e);
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
   }
 };
 const resRequests = async (req, res, next) => {
@@ -320,7 +465,126 @@ const addStock = async (req, res, next) => {
       );
     } else {
       res.status(404);
-      return res.json(errorFunction(true, 'Stock Insetion Failed  '));
+      return res.json(errorFunction(true, 'Stock Insertion Failed  '));
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong' + error));
+  }
+};
+const updateStock = async (req, res, next) => {
+  try {
+    console.log('Inside Update Stock  Route');
+    const admin = await getUserFromSession(req, res);
+    console.log(admin.id);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (!existingAdmin) {
+      res.status(404);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To Update Stock Items')
+      );
+    }
+    const singleitem = await Stock.findOne({
+      where: { id: req.body.stock_id },
+    });
+    var old_name = singleitem.product_name;
+    var new_name = req.body.product_name;
+    var old_qty = singleitem.total_qty;
+    var new_qty = req.body.total_qty;
+    console.log(singleitem.product_name);
+    const updatedStock = await Stock.update(
+      {
+        product_name: req.body.product_name,
+        available_qty: req.body.available_qty,
+        total_qty: req.body.total_qty,
+        product_image: req.body.product_image,
+        price_per_product: req.body.price_per_product,
+      },
+      {
+        where: {
+          id: req.body.stock_id,
+        },
+      }
+    );
+    if (updatedStock) {
+      if (old_name != new_name || old_qty != new_qty) {
+        if (old_qty === new_qty) {
+          for (var i = 0; i < old_qty; i++) {
+            const producttobeupdated = await Product.findOne({
+              where: {
+                product_name: old_name + '_' + [i],
+              },
+            });
+            producttobeupdated.product_name = new_name + '_' + [i];
+            await producttobeupdated.save();
+          }
+        } else if (old_qty < new_qty && old_name != new_name) {
+          for (var i = 1; i <= new_qty; i++) {
+            if (i > old_qty) {
+              await Product.create({
+                product_name: new_name + '_' + [i],
+                is_available: 1,
+              });
+            } else {
+              const producttobeupdated = await Product.findOne({
+                where: {
+                  product_name: old_name + '_' + [i],
+                },
+              });
+              producttobeupdated.product_name = new_name + '_' + [i];
+              await producttobeupdated.save();
+            }
+          }
+        } else if (old_qty > new_qty && old_name != new_name) {
+          for (var i = old_qty; i >= 1; i--) {
+            if (i > new_qty) {
+              const producttobedeleted = await Product.findOne({
+                where: {
+                  product_name: old_name + '_' + [i],
+                },
+              });
+              producttobedeleted.destroy();
+            } else {
+              const producttobeupdated = await Product.findOne({
+                where: {
+                  product_name: old_name + '_' + [i],
+                },
+              });
+              producttobeupdated.product_name = new_name + '_' + [i];
+              await producttobeupdated.save();
+            }
+          }
+        } else if (old_qty < new_qty && old_name === new_name) {
+          for (var i = 1; i <= new_qty; i++) {
+            if (i > old_qty) {
+              await Product.create({
+                product_name: new_name + '_' + [i],
+                is_available: 1,
+              });
+            }
+          }
+        } else if (old_qty > new_qty && old_name === new_name) {
+          for (var i = old_qty; i >= 1; i--) {
+            if (i > new_qty) {
+              const producttobedeleted = await Product.findOne({
+                where: {
+                  product_name: old_name + '_' + [i],
+                },
+              });
+              producttobedeleted.destroy();
+            }
+          }
+        }
+      }
+      res.status(201);
+      return res.json(
+        errorFunction(false, 'Stock Updated Successfully', { updatedStock })
+      );
+    } else {
+      res.status(404);
+      return res.json(errorFunction(true, 'Stock updation Failed  '));
     }
   } catch (error) {
     res.status(501);
@@ -329,7 +593,7 @@ const addStock = async (req, res, next) => {
 };
 var acceptedRequests = async (req, res, next) => {
   try {
-    const admin = getUserFromSession(req, res);
+    const admin = await getUserFromSession(req, res);
     console.log(admin.id);
     const existingAdmin = await User.findOne({
       where: { id: admin.id, is_admin: true },
@@ -337,19 +601,19 @@ var acceptedRequests = async (req, res, next) => {
     if (!existingAdmin) {
       res.status(404);
       return res.json(
-        errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+        errorFunction(true, 'Only Admin Have Rights To See Requests')
       );
     } else {
       var acceptedRequestsbyAdmin = await ProductMapping.findAll({
         where: {
-          status: 'accpeted',
+          status: 'accepted',
           assignedById: admin.id,
         },
       });
       if (!acceptedRequestsbyAdmin) {
         res.status(404);
         return res.json(
-          errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+          errorFunction(true, 'you have not accepted any requests')
         );
       } else {
         res.status(200).send(acceptedRequestsbyAdmin);
@@ -362,7 +626,7 @@ var acceptedRequests = async (req, res, next) => {
 };
 var rejectedRequests = async (req, res, next) => {
   try {
-    const admin = getUserFromSession(req, res);
+    const admin = await getUserFromSession(req, res);
     console.log(admin.id);
     const existingAdmin = await User.findOne({
       where: { id: admin.id, is_admin: true },
@@ -370,7 +634,7 @@ var rejectedRequests = async (req, res, next) => {
     if (!existingAdmin) {
       res.status(404);
       return res.json(
-        errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+        errorFunction(true, 'Only Admin Have Rights To See Requests')
       );
     } else {
       var rejectedRequestsbyAdmin = await ProductMapping.findAll({
@@ -382,7 +646,7 @@ var rejectedRequests = async (req, res, next) => {
       if (!rejectedRequestsbyAdmin) {
         res.status(404);
         return res.json(
-          errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
+          errorFunction(true, 'you have not accepted any requests')
         );
       } else {
         res.status(200).send(rejectedRequestsbyAdmin);
@@ -400,9 +664,12 @@ module.exports = {
   updateUser,
   getRemovedUsers,
   removeStock,
+  updateStock,
   addStock,
   viewRequests,
   resRequests,
   acceptedRequests,
   rejectedRequests,
+  getAllProducts,
+  getProductById,
 };

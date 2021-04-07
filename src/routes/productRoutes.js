@@ -7,7 +7,7 @@ const {
   getStockId,
 } = require('../controllers/product/product.controller');
 
-router.get('/getStock', authenticate, getStock);
+router.get('/getStocks', authenticate, getStock);
 
 router.get('/getStock/:id', authenticate, getStockId);
 

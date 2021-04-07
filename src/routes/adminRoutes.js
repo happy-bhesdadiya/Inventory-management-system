@@ -6,11 +6,14 @@ const {
   updateUser,
   getRemovedUsers,
   removeStock,
+  updateStock,
   addStock,
   viewRequests,
   resRequests,
   acceptedRequests,
   rejectedRequests,
+  getAllProducts,
+  getProductById,
 } = require('./../controllers/admin/admin.controller');
 //const adminValidation = require('./../controllers/admin/admin.validator');
 const {
@@ -27,9 +30,13 @@ router.post('/addStock', authenticate, stockValidation, addStock);
 router.get('/getUsers', getUsers);
 router.get('/acceptedReqs', acceptedRequests);
 router.get('/rejectedReqs', rejectedRequests);
+router.post('/updateStock', updateStock);
 router.post('/updateUser', updateUser);
 router.post('/respondReq', authenticate, resRequests);
 router.get('/getRemovedUsers', getRemovedUsers);
 router.get('/viewReqs', authenticate, viewRequests);
 router.post('/removeStock', removeStock);
+router.get('/geProducts', getAllProducts);
+router.get('/getProduct/:id', authenticate, getProductById);
+
 module.exports = router;
