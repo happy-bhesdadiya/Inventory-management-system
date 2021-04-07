@@ -1,7 +1,6 @@
 const express = require("express");
 const employeeRoutes = require("./employeeRoutes");
 const adminRoutes = require("./adminRoutes");
-
 const { defaultController, authenticationController } = require("./../controllers/defaultController");
 const authentication = require("./../utils/authentication");
 
