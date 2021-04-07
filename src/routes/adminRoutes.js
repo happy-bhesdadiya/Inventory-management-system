@@ -8,6 +8,7 @@ const {
   removeStock,
   updateStock,
   addStock,
+  updateStock,
   viewRequests,
   resRequests,
   acceptedRequests,
@@ -26,6 +27,8 @@ const authenticate = require('./../utils/authentication');
 const router = express.Router();
 router.post('/updateProfile', authenticate, adminValidation, updateProfile);
 router.post('/addAdmin', authenticate, adminValidation, addAdmin);
+router.post('/addStock', authenticate,stockValidation,addStock);
+router.post('/updateStock', authenticate,stockValidation,updateStock);
 router.post('/addStock', authenticate, stockValidation, addStock);
 router.get('/getUsers', getUsers);
 router.get('/acceptedReqs', acceptedRequests);

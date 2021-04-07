@@ -51,7 +51,7 @@ const employeeLogin = async (req, res, next) => {
     }
   } catch (error) {
     res.status(501);
-    return res.json(errorFunction(true, 'Something Went Wrong'));
+    return res.json(errorFunction(true, 'Something Went Wrong'),error);
   }
 };
 
@@ -67,12 +67,13 @@ const employeeSignUp = async (req, res, next) => {
         const hashedPassword = await securePassword(req.body.password);
         const newEmployee = await User.create({
           user_name: req.body.name,
-          profile_image: req.body.profile_image,
+         
           email: req.body.email,
           password: hashedPassword,
           mobile_number: req.body.mobile_number,
           branch_id: req.body.branch_id,
           is_active: 1,
+          profile_image: req.body.profile_image,
           is_admin: req.body.is_admin,
         });
         if (newEmployee) {
