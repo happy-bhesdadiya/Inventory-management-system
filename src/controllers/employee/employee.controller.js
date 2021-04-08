@@ -13,6 +13,7 @@ const { Sequelize } = require('../../utils/connect');
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 const Op = Sequelize.Op;
 const sevenDays = 7 * 24 * 60 * 60 * 1000;
+const {imageUpload}=require('../../utils/imageupload')
 
 const employeeLogin = async (req, res, next) => {
   try {
@@ -140,13 +141,14 @@ const updateEmployeeProfile = async (req, res, next) => {
       return res.json(errorFunction(true, 'Employee Not Found'));
     }
     const hashedPassword = await securePassword(req.body.password);
+    const user_image=await imageUpload(req.body.profile_pic,'user');
     const c1 = await User.update(
       {
         user_name: req.body.name,
         mobile_number: req.body.mobile_number,
         password: hashedPassword,
         branch_id: req.body.branch_id,
-        profile_pic: req.body.profile_pic,
+        profile_pic: user_image,
         is_admin: req.body.is_admin,
         is_active: req.body.is_active,
       },

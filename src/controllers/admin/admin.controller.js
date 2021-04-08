@@ -10,6 +10,7 @@ const { tokenGeneration } = require('../../utils/jwtTokens');
 const Cryptr = require('cryptr');
 const getUserFromSession = require('../../utils/getUser');
 const { Sequelize } = require('../../utils/connect');
+const {imageUpload}=require('../../utils/imageupload')
 
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 
@@ -26,13 +27,14 @@ const updateProfile = async (req, res, next) => {
       return res.json(errorFunction(true, 'Admin Not Found'));
     }
     const hashedPassword = await securePassword(req.body.password);
+    const image_admin=await imageUpload(req.body.profile_pic,'user');
     const c1 = await User.update(
       {
         user_name: req.body.name,
         mobile_number: req.body.mobile_number,
         password: hashedPassword,
         branch_id: req.body.branch_id,
-        profile_pic: req.body.profile_pic,
+        profile_pic: image_admin,
         is_admin: req.body.is_admin,
         is_active: req.body.is_active,
       },
@@ -194,7 +196,6 @@ const updateUser = async (req, res, next) => {
       const {
         user_id,
         user_name,
-        profile_image,
         email,
         mobile_number,
         password,
@@ -204,7 +205,7 @@ const updateUser = async (req, res, next) => {
       var user = await User.update(
         {
           user_name,
-          profile_image,
+          
           email,
           password,
           mobile_number,
@@ -441,12 +442,12 @@ const addStock = async (req, res, next) => {
         errorFunction(true, 'Only Admin Have Rights To Add Stock Items')
       );
     }
-
+    const image_stock=await imageUpload(req.body.product_image,'product')
     const newProduct = await Stock.create({
       product_name: req.body.product_name,
       available_qty: req.body.total_qty,
       total_qty: req.body.total_qty,
-      product_image: req.body.product_image,
+      product_image: image_stock,
       price_per_product: req.body.price_per_product,
     });
 
@@ -486,6 +487,7 @@ const updateStock = async (req, res, next) => {
         errorFunction(true, 'Only Admin Have Rights To Update Stock Items')
       );
     }
+    const image_stock=await imageUpload(req.body.product_image,'product');
     const singleitem = await Stock.findOne({
       where: { id: req.body.stock_id },
     });
@@ -499,7 +501,7 @@ const updateStock = async (req, res, next) => {
         product_name: req.body.product_name,
         available_qty: req.body.available_qty,
         total_qty: req.body.total_qty,
-        product_image: req.body.product_image,
+        product_image: image_stock,
         price_per_product: req.body.price_per_product,
       },
       {
@@ -657,75 +659,13 @@ var rejectedRequests = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong' + error));
   }
 };
-<<<<<<< HEAD
-=======
 
 
 
-const updateStock = async (req, res, next) =>{
-  try {
-      console.log("Inside Update Stock  Route")
-      const admin=await getUserFromSession(req,res);
-      console.log(admin.id);
-      const existingAdmin = await User.findOne({ where: { id: admin.id,is_admin:true} });
-      if(!existingAdmin)
-      {
-           res.status(404);
-                return res.json(errorFunction(true, "Only Admin Have Rights To Update Stock Items"));
-      }
-
-      const singleitem = await Stock.findOne({ where: { id: req.body.id} });
-      console.log(singleitem.product_name);
-      const c1= await Stock.update({product_name:req.body.product_name,
-        available_qty:req.body.available_qty,
-      total_qty:req.body.total_qty,product_image:req.body.product_image,
-    price_per_product:req.body.price_per_product},{where:{
-        id:req.body.id
-      }})
-     // console.log(c1)
-    //console.log("this is console",singleitem.total_qty)
-   
-         for (j = 1; j <=singleitem.total_qty; j++) {
-          //text += cars[i] + "<br>";
-          //product_name: req.body.product_name +[j];
-        console.log(singleitem.product_name +"_"+[j])
-          const products = await Product.destroy({where:{
-            product_name:singleitem.product_name +"_"+[j]
-        }})
-        }
-
-        console.log(req.body.total_qty)
-        for (j = 1; j <= req.body.total_qty; j++) {
-         //text += cars[i] + "<br>";
-         const products = await Product.create({
-             product_name: req.body.product_name +"_"+[j],
-             is_available:true
-         });
-        }
-    if(c1[0]===1)
-    {
-      res.status(201);
-      const updatedstock = await Stock.findOne({ where: { id: req.body.id } });
-         return res.json(errorFunction(false, "Stock Updated Successfully", { updatedstock }));
-    }
-    else{
-      res.status(404);
-              return res.json(errorFunction(true, "Stock updation Failed  "));
-    } 
-       
-      
-  
-}
-      
-  catch (error) {
-          res.status(501);
-          return res.json(errorFunction(true, "Something Went Wrong" + error));
-      }
-}
 
 
 
->>>>>>> 5f508c44190989bd65941331a8bc82a17b3d4ae5
+
 module.exports = {
   updateProfile,
   addAdmin,
@@ -735,7 +675,6 @@ module.exports = {
   removeStock,
   updateStock,
   addStock,
-  updateStock,
   viewRequests,
   resRequests,
   acceptedRequests,
