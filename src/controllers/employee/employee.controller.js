@@ -13,7 +13,7 @@ const { Sequelize } = require('../../utils/connect');
 const cryptr = new Cryptr(process.env.SECRET_KEY);
 const Op = Sequelize.Op;
 const sevenDays = 7 * 24 * 60 * 60 * 1000;
-const {imageUpload}=require('../../utils/imageupload')
+const { imageUpload } = require('../../utils/imageupload');
 
 const employeeLogin = async (req, res, next) => {
   try {
@@ -52,7 +52,7 @@ const employeeLogin = async (req, res, next) => {
     }
   } catch (error) {
     res.status(501);
-    return res.json(errorFunction(true, 'Something Went Wrong'),error);
+    return res.json(errorFunction(true, 'Something Went Wrong'), error);
   }
 };
 
@@ -68,7 +68,7 @@ const employeeSignUp = async (req, res, next) => {
         const hashedPassword = await securePassword(req.body.password);
         const newEmployee = await User.create({
           user_name: req.body.name,
-         
+
           email: req.body.email,
           password: hashedPassword,
           mobile_number: req.body.mobile_number,
@@ -141,14 +141,15 @@ const updateEmployeeProfile = async (req, res, next) => {
       return res.json(errorFunction(true, 'Employee Not Found'));
     }
     const hashedPassword = await securePassword(req.body.password);
-    const user_image=await imageUpload(req.body.profile_pic,'user');
+    const user_image = await imageUpload(req.body.profile_image, 'user');
+    console.log(user_image);
     const c1 = await User.update(
       {
         user_name: req.body.name,
         mobile_number: req.body.mobile_number,
         password: hashedPassword,
         branch_id: req.body.branch_id,
-        profile_pic: user_image,
+        profile_image: user_image,
         is_admin: req.body.is_admin,
         is_active: req.body.is_active,
       },

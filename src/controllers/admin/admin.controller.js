@@ -488,6 +488,7 @@ const updateStock = async (req, res, next) => {
       );
     }
     const image_stock = await imageUpload(req.body.product_image, 'product');
+    console.log(image_stock);
     const singleitem = await Stock.findOne({
       where: { id: req.body.stock_id },
     });
