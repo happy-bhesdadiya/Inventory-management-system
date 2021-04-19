@@ -7,6 +7,7 @@ const {
   updateEmployeeProfile,
   employeeGetRequests,
   employeeLogout,
+  getAllStock
 } = require('./../controllers/employee/employee.controller');
 const employeeValidation = require('./../controllers/employee/employee.validator');
 const authenticate = require('./../utils/authentication');
@@ -26,6 +27,8 @@ router.post(
   updateEmployeeProfile
 );
 router.post('/getRequests', authenticate, employeeGetRequests);
+
+router.get('/getAllStock', authenticate, getAllStock);
 
 router.post('/logout', authenticate, employeeLogout);
 module.exports = router;

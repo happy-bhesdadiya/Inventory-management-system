@@ -291,6 +291,25 @@ const employeeGetRequests = async (req, res, next) => {
   }
 };
 
+const getAllStock = async (req, res, next) => {
+  try {
+    const stock = await Stock.findAll();
+
+    if (stock) {
+      res.status(200);
+      return res.json(
+        errorFunction(false, 'Fetching Stocks Successfully!', stock)
+      );
+    } else {
+      res.status(404);
+      return res.json(errorFunction(true, 'Stock not found!'));
+    }
+  } catch (e) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something went wrong', e));
+  }
+};
+
 const employeeLogout = async (req, res, next) => {
   try {
     const employee = await getUserFromSession(req, res);
@@ -316,4 +335,5 @@ module.exports = {
   aquireProduct,
   employeeGetRequests,
   employeeLogout,
+  getAllStock
 };
