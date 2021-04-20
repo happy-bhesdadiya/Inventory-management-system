@@ -5,7 +5,7 @@ const {
   employeeViewProfile,
   aquireProduct,
   updateEmployeeProfile,
-  employeeGetRequests,
+  getMyAllRequest,
   employeeLogout,
   getAllStock
 } = require('./../controllers/employee/employee.controller');
@@ -26,7 +26,7 @@ router.post(
   employeeValidation,
   updateEmployeeProfile
 );
-router.post('/getRequests', authenticate, employeeGetRequests);
+router.get('/getMyRequests', authenticate, getMyAllRequest);
 
 router.get('/getAllStock', authenticate, getAllStock);
 

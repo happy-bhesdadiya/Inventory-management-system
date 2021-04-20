@@ -35,10 +35,10 @@ const employeeLogin = async (req, res, next) => {
         });
         res.status(202);
         return res.json(
-          errorFunction(false, 'Employee Logged In Successfully', {
+          errorFunction(false, 'Employee Logged In Successfully', 
             employee,
-            token,
-          })
+            // token,
+          )
         );
       } else {
         console.log('inner else');
@@ -231,64 +231,113 @@ const aquireProduct = async (req, res, next) => {
     return res.json(errorFunction(true, 'Something Went Wrong', error));
   }
 };
-const employeeGetRequests = async (req, res, next) => {
-  try {
-    const employee = await getUserFromSession(req, res);
-    if (employee) {
-      const data = await ProductMapping.findAll({
-        attributes: ['status', 'productId', 'assignedById'],
-        where: { assignedToId: employee.id },
-      });
-      if (data) {
-        var length = data.length;
-        var i = 1;
-        var response_array = [];
-        data.forEach(async (element) => {
-          var product_id = element.productId;
-          var status = element.status;
-          const result = await Product.findOne({
-            attributes: ['product_name'],
-            where: { id: product_id },
-          });
-          if (status === 'pending') {
-            var obj = {
-              product_id: product_id,
-              status: status,
-              product_name: result.product_name,
-            };
-            response_array.push(obj);
-          } else {
-            var obj = {
-              product_id: product_id,
-              status: status,
-              product_name: result.product_name,
-              assigned_by: element.assignedById,
-            };
-            response_array.push(obj);
-          }
-          if (i === length) {
-            res.status(200).send(response_array);
-          }
-          i++;
-        });
-      } else {
-        res.status(404);
-        return res.json(
-          errorFunction(true, `You haven't made any requests yet`)
-        );
-      }
-    } else {
-      res.status(404);
-      return res.json(errorFunction(true, `Wrong User details`));
-    }
-  } catch (err) {
-    var error = {
-      is_error: true,
-      message: err,
-    };
-    console.log(error);
-    return res.status(500).send(error);
-  }
+
+const getMyAllRequest = async (req, res, next) => {
+	try {
+		const employee = await getUserFromSession(req, res);
+		if (employee) {
+			const data = await ProductMapping.findAll({
+				attributes: [
+					"id",
+					"status",
+					"productId",
+					"assignedById",
+					"returned_date",
+				],
+				where: { assignedToId: employee.id },
+			});
+			if (data.length !== 0) {
+				var length = data.length;
+				var i = 1;
+				var myRequests = [];
+				data.forEach(async (request) => {
+					var product_id = request.productId;
+					var status = request.status;
+					var rid = request.id;
+					const result = await Product.findOne({
+						attributes: ["product_name", "createdAt"],
+						where: { id: product_id },
+					});
+					const resultPrice = await Stock.findOne({
+						attributes: ["price_per_product"],
+						where: {
+							product_name: result.product_name.split(
+								"_"
+							)[0],
+						},
+					});
+					if (status === "Pending") {
+						var pendingRequest = {
+							id: rid,
+							product_id: product_id,
+							product_name: result.product_name.split(
+								"_"
+							)[0],
+							status: status,
+							createdAt: result.createdAt,
+							price: resultPrice.price_per_product,
+						};
+						myRequests.push(pendingRequest);
+					}
+					if (status === "Rejected") {
+						var rejectedRequests = {
+							id: rid,
+							product_id: product_id,
+							product_name: result.product_name.split(
+								"_"
+							)[0],
+							status: status,
+							createdAt: result.createdAt,
+							price: resultPrice.price_per_product,
+						};
+						myRequests.push(rejectedRequests);
+					}
+					if (status === "Accepted") {
+						var acceptedRequests = {
+							id: rid,
+							product_id: product_id,
+							status: status,
+							product_name: result.product_name.split(
+								"_"
+							)[0],
+							assigned_by: request.assignedById,
+							createdAt: result.createdAt,
+							returnDate: request.returned_date,
+							price: resultPrice.price_per_product,
+						};
+						myRequests.push(acceptedRequests);
+					}
+					if (i === length) {
+						res.status(200);
+						return res.json(
+							errorFunction(
+								false,
+								"Requests Fetched Succesfully",
+								myRequests
+							)
+						);
+					}
+					i++;
+				});
+			} else {
+				res.status(200);
+				return res.json(
+					errorFunction(
+						false,
+						`You haven't made any requests yet`,
+						[]
+					)
+				);
+			}
+		} else {
+			res.status(404);
+			return res.json(errorFunction(true, `Wrong User details`));
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(500);
+		return res.json(errorFunction(true, "Something Went Wrong"));
+	}
 };
 
 const getAllStock = async (req, res, next) => {
@@ -333,7 +382,7 @@ module.exports = {
   employeeViewProfile,
   updateEmployeeProfile,
   aquireProduct,
-  employeeGetRequests,
+  getMyAllRequest,
   employeeLogout,
   getAllStock
 };
