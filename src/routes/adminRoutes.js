@@ -14,6 +14,7 @@ const {
   rejectedRequests,
   getAllProducts,
   getProductById,
+  getAdmin
 } = require('./../controllers/admin/admin.controller');
 //const adminValidation = require('./../controllers/admin/admin.validator');
 const {
@@ -30,6 +31,7 @@ router.post('/addStock', authenticate, stockValidation, addStock);
 router.post('/updateStock', authenticate, stockValidation, updateStock);
 router.post('/addStock', authenticate, stockValidation, addStock);
 router.get('/getUsers', getUsers);
+router.get('/getAdmin', getAdmin);
 router.get('/acceptedReqs', acceptedRequests);
 router.get('/rejectedReqs', rejectedRequests);
 router.post('/updateStock', updateStock);

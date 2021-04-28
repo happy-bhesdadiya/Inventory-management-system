@@ -105,7 +105,37 @@ const getUsers = async (req, res, next) => {
       where: { id: admin.id, is_admin: true },
     });
     if (existingAdmin) {
-      let users = await User.findAll({ where: { is_active: 1 } });
+      let users = await User.findAll({ where: { is_active: true } });
+      if (users) {
+        res.status(200);
+        return res.json(
+          errorFunction(false, 'Users data fetched Successfully', users)
+        );
+      } else {
+        res.status(403);
+        return res.json(
+          errorFunction(true, 'Something Went wrong while getting Users')
+        );
+      }
+    } else {
+      res.status(403);
+      return res.json(
+        errorFunction(true, 'Only Admin Have Rights To See Users')
+      );
+    }
+  } catch (error) {
+    res.status(501);
+    return res.json(errorFunction(true, 'Something Went Wrong'));
+  }
+};
+const getAdmin = async (req, res, next) => {
+  try {
+    let admin = await getUserFromSession(req, res);
+    const existingAdmin = await User.findOne({
+      where: { id: admin.id, is_admin: true },
+    });
+    if (existingAdmin) {
+      let users = await User.findAll({ where: { is_active: true ,is_admin:true} });
       if (users) {
         res.status(200);
         return res.json(
@@ -675,4 +705,5 @@ module.exports = {
   rejectedRequests,
   getAllProducts,
   getProductById,
+  getAdmin,
 };
