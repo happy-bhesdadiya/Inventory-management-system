@@ -15,22 +15,19 @@ const authenticate = require('./../utils/authentication');
 const router = express.Router();
 
 router.post('/login', employeeLogin);
-
+router.get('/getAllStock', authenticate, getAllStock);
+router.get('/getMyRequests', authenticate, getMyAllRequest);
 router.post('/signup', employeeValidation, employeeSignUp);
-router.post('/aquireProduct', aquireProduct);
-router.get('/viewProfile', authenticate, employeeViewProfile);
 
+router.get('/viewProfile', authenticate, employeeViewProfile);
+router.post('/aquireProduct', aquireProduct);
 router.post(
   '/updateProfile',
   authenticate,
   employeeValidation,
   employeeUpdateProfile
 );
-
-router.get('/getAllStock', authenticate, getAllStock);
-
-router.get('/getMyRequests', authenticate, getMyAllRequest);
+// router.post('/getRequests', authenticate, employeeGetRequests);
 
 router.post('/logout', authenticate, employeeLogout);
-
 module.exports = router;

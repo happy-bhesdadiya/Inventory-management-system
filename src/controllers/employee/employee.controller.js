@@ -1,26 +1,26 @@
 require('dotenv').config();
 const errorFunction = require('./../../utils/errorFunction');
 const User = require('./../../models/user');
-const ProductMapping = require('../../models/productMapping');
-const Product = require('../../models/product');
-const Stock = require('../../models/stock');
+const Stock = require('./../../models/stock');
+const Product = require('./../../models/product');
+const ProductMapping = require('./../../models/productMapping');
 const emailRegEx = RegExp(/^[a-zA-Z0-9._]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
 const { securePassword } = require('../../utils/securePassword');
 const { tokenGeneration } = require('../../utils/jwtTokens');
 const Cryptr = require('cryptr');
-const { Op } = require('sequelize');
 const getUserFromSession = require('../../utils/getUser');
+const { Sequelize } = require('../../utils/connect');
 const cryptr = new Cryptr(process.env.SECRET_KEY);
-
+const Op = Sequelize.Op;
 const sevenDays = 7 * 24 * 60 * 60 * 1000;
 const { imageUpload } = require('../../utils/imageupload');
 
 const employeeLogin = async (req, res, next) => {
   try {
-    const { email, password, is_admin } = req.body;
-    if (!is_admin && emailRegEx.test(email) && password.length >= 8) {
+    const { email, password } = req.body;
+    if (emailRegEx.test(email) && password.length >= 8) {
       const employee = await User.findOne({
-        where: { email: email, is_admin: is_admin },
+        where: { email: email },
       });
       if (employee) {
         const tokenOriginal = await tokenGeneration({
@@ -62,12 +62,14 @@ const employeeSignUp = async (req, res, next) => {
         return res.json(errorFunction(true, 'Employee Already Exists'));
       } else {
         const hashedPassword = await securePassword(req.body.password);
+        const profilePhoto = await imageUpload(req.body.profile_image);
         const newEmployee = await User.create({
           user_name: req.body.name,
           email: req.body.email,
           password: hashedPassword,
           mobile_number: req.body.mobile_number,
           branch_id: req.body.branch_id,
+          profile_image: profilePhoto,
           is_active: req.body.is_active,
           is_admin: req.body.is_admin,
         });
